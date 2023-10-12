@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <menuitem id="bike_rent_menu_root"
+              name="Bike Rent"
+              action="bike_rent_action"
+              web_icon="bike_rent,static/description/logo.png"/>
+
+</odoo>

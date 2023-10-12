@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="bike_rent_view_form" model="ir.ui.view">
+        <field name="name">bike.rent.view.form</field>
+        <field name="model">bike.rent</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="bike_name"/>
+                            <field name="customer_name"/>
+                            <field name="price"/>
+                            <field name="rent_start" widget="daterange" options="{'related_end_date': 'rent_stop'}"/>
+                            <field name="rent_stop" widget="daterange" options="{'related_start_date': 'rent_start'}"/>
+                            <field name="notes"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="bike_rent_view_tree" model="ir.ui.view">
+        <field name="name">bike.rent.view.tree</field>
+        <field name="model">bike.rent</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="currency_id" invisible="1"/>
+                <field name="bike_name"/>
+                <field name="customer_name"/>
+                <field name="price"/>
+                <field name="rent_start"/>
+                <field name="rent_stop"/>
+                <field name="notes"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="bike_rent_action" model="ir.actions.act_window">
+        <field name="name">Bike Rent</field>
+        <field name="res_model">bike.rent</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
