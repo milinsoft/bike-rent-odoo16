@@ -1,28 +1,28 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
     <record id="bike_rent_active_demo" model="bike.rent">
         <field name="bike_id" ref="product.product_product_1"/>
-        <field name="customer_id" ref = "base.partner_demo"/>
+        <field name="partner_id" ref="base.partner_demo"/>
         <field name="price">10</field>
         <field name="rent_start" eval="DateTime.now()"/>
-        <field name="rent_stop"  eval="DateTime.now() + relativedelta(days=10)"/>
+        <field name="rent_stop" eval="DateTime.now() + relativedelta(days=10)"/>
     </record>
 
     <record id="bike_rent_past_demo" model="bike.rent">
         <field name="bike_id" ref="product.product_product_1"/>
-        <field name="customer_id" ref = "base.partner_demo"/>
+        <field name="partner_id" ref="base.partner_demo"/>
         <field name="price">10</field>
         <field name="rent_start" eval="DateTime.now() - relativedelta(days=10)"/>
-        <field name="rent_stop"  eval="DateTime.now() - relativedelta(days=5)"/>
+        <field name="rent_stop" eval="DateTime.now() - relativedelta(days=5)"/>
     </record>
 
     <record id="bike_rent_free_demo" model="bike.rent">
         <field name="bike_id" ref="product.product_product_1"/>
-        <field name="customer_id" ref = "base.partner_demo"/>
+        <field name="partner_id" ref="base.partner_demo"/>
         <field name="price">0</field>
         <field name="rent_start" eval="DateTime.now()"/>
-        <field name="rent_stop"  eval="DateTime.now() + relativedelta(days=10)"/>
+        <field name="rent_stop" eval="DateTime.now() + relativedelta(days=10)"/>
     </record>
 
 </odoo>

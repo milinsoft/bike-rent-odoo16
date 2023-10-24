@@ -11,23 +11,27 @@
                         <group>
                             <field name="currency_id" invisible="1"/>
                             <field name="bike_id"/>
-                            <field name="customer_id"/>
+                            <field name="partner_id"/>
                             <field name="price"/>
                             <field
-                                    name="rent_start"
-                                    widget="daterange"
-                                    options="{'related_end_date': 'rent_stop'}"
+                                name="rent_start"
+                                widget="daterange"
+                                options="{'related_end_date': 'rent_stop'}"
                             />
                             <field
-                                    name="rent_stop"
-                                    widget="daterange"
-                                    options="{'related_start_date': 'rent_start'}"
+                                name="rent_stop"
+                                widget="daterange"
+                                options="{'related_start_date': 'rent_start'}"
                             />
                             <field name="number_of_days"/>
                             <field name="notes"/>
                         </group>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -39,7 +43,7 @@
             <tree>
                 <field name="currency_id" invisible="1"/>
                 <field name="bike_id"/>
-                <field name="customer_id"/>
+                <field name="partner_id"/>
                 <field name="price"/>
                 <field name="rent_start"/>
                 <field name="rent_stop"/>
@@ -56,22 +60,51 @@
             <search>
                 <field name="currency_id"/>
                 <field name="bike_id"/>
-                <field name="customer_id"/>
+                <field name="partner_id"/>
                 <field name="price"/>
                 <field name="number_of_days"/>
                 <field name="notes"/>
 
-                <filter name="active" string="Active" domain="[('rent_stop', '>', datetime.datetime.now())]"/>
-                <filter name="free_rent" string="Free Rent" domain="[('price', '=', 0)]"/>
-                <filter name="group_by_product_id" string="Product" context="{'group_by': 'bike_id'}"/>
+                <filter
+                    name="active"
+                    string="Active"
+                    domain="[('rent_stop', '>', datetime.datetime.now())]"
+                />
+                <filter
+                    name="free_rent"
+                    string="Free Rent"
+                    domain="[('price', '=', 0)]"
+                />
+                <filter
+                    name="group_by_product_id"
+                    string="Product"
+                    context="{'group_by': 'bike_id'}"
+                />
+                <filter
+                    name="group_by_partner_id"
+                    string="Customer"
+                    context="{'group_by': 'partner_id'}"
+                />
             </search>
+        </field>
+    </record>
+
+    <record id="bike_rent_view_pivot" model="ir.ui.view">
+        <field name="name">bike.rent.view.pivot</field>
+        <field name="model">bike.rent</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="bike_id" type="row"/>
+                <field name="number_of_days" type="measure"/>
+                <field name="price" type="measure"/>
+            </pivot>
         </field>
     </record>
 
     <record id="bike_rent_action" model="ir.actions.act_window">
         <field name="name">Bike Rent</field>
         <field name="res_model">bike.rent</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,pivot</field>
     </record>
 
 </odoo>

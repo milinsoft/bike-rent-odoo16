@@ -17,6 +17,8 @@
         "security/ir.model.access.csv",
         "views/bike_rent.xml",
         "views/bike_rent_menus.xml",
+        "views/product_template.xml",
+        "views/res_partner.xml",
     ],
     "demo": ["demo/bike_rent.xml"],
     "installable": True,

@@ -4,10 +4,13 @@ from odoo.exceptions import UserError, ValidationError
 
 class BikeRent(models.Model):
     _name = "bike.rent"
+    _inherit = "mail.thread"
     _description = "Bike Rent"
 
-    bike_id = fields.Many2one("product.product")
-    customer_id = fields.Many2one("res.partner")
+    bike_id = fields.Many2one(
+        "product.product", domain=[("product_tmpl_id.is_bike", "=", True)]
+    )
+    partner_id = fields.Many2one("res.partner", string="Customer")
     currency_id = fields.Many2one(
         "res.currency", default=lambda self: self.env.company.currency_id
     )
@@ -15,12 +18,15 @@ class BikeRent(models.Model):
     rent_start = fields.Datetime(required=True)
     rent_stop = fields.Datetime(required=True)
     notes = fields.Text()
-    number_of_days = fields.Integer(compute="_compute_number_of_days", default=0)
+    number_of_days = fields.Integer(compute="_compute_number_of_days", store=True)
 
     @api.depends("rent_start", "rent_stop")
     def _compute_number_of_days(self):
-        for record in self.filtered(lambda r: r.rent_start and r.rent_stop):
-            record.number_of_days = (record.rent_stop - record.rent_start).days
+        for record in self:
+            number_of_days = 0
+            if record.rent_start and record.rent_stop:
+                number_of_days = (record.rent_stop - record.rent_start).days
+            record.number_of_days = number_of_days
 
     @api.constrains("rent_start", "rent_stop")
     def _check_rent_stop_prior_rent_start(self):

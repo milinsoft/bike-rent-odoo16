@@ -8,7 +8,8 @@ class TestBikeRent(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.bike_rent_record = cls.env["bike.rent"].create(
+        cls.BikeRent = cls.env["bike.rent"]
+        cls.bike_rent_record = cls.BikeRent.create(
             [
                 {
                     "rent_start": (now := datetime.now()),
