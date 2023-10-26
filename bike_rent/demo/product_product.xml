@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="bike_rent_green_bmw_demo" model="product.product">
+        <field name="name">Green BMW Bike</field>
+        <field name="type">service</field>
+        <field name="list_price">0.0</field>
+        <field name="sale_ok">False</field>
+        <field name="is_bike">True</field>
+        <field name="bike_model">X6</field>
+        <field name="bike_manufacturer">BMW</field>
+        <field
+            name="image_1920"
+            type="base64"
+            file="bike_rent/static/src/img/green-bmw-demo-bicycle.png"
+        />
+    </record>
+
+    <record id="bike_rent_white_bmw_demo" model="product.product">
+        <field name="name">White BMW Bike</field>
+        <field name="type">service</field>
+        <field name="list_price">0.0</field>
+        <field name="sale_ok">False</field>
+        <field name="is_bike">True</field>
+        <field name="bike_model">X6</field>
+        <field name="bike_manufacturer">BMW</field>
+        <field
+            name="image_1920"
+            type="base64"
+            file="bike_rent/static/src/img/white-bmw-demo-bicycle.jpeg"
+        />
+    </record>
+
+    <record id="bike_rent_black_balticvairas_demo" model="product.product">
+        <field name="name">Electric Bike</field>
+        <field name="type">service</field>
+        <field name="list_price">0.0</field>
+        <field name="sale_ok">False</field>
+        <field name="is_bike">True</field>
+        <field name="bike_model">E-01</field>
+        <field name="bike_manufacturer">Baltik vairas</field>
+        <field
+            name="image_1920"
+            type="base64"
+            file="bike_rent/static/src/img/black-balticvairas-demo-bicycle.jpg"
+        />
+    </record>
+
+</odoo>

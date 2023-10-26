@@ -1,16 +1,13 @@
-from datetime import datetime, timedelta
-
 from odoo import Command
-from odoo.tests import TransactionCase
+
+from .common import TestBikeRentCommon
 
 
-class TestPartnerShowPartnerRentals(TransactionCase):
+class TestPartnerShowPartnerRentals(TestBikeRentCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.ResPartner = cls.env["res.partner"]
-        cls.BikeRent = cls.env["bike.rent"]
-        cls.bank = cls.ResPartner.create(
+        cls.partner_rich_bank = cls.ResPartner.create(
             [
                 {
                     "name": "Rich Bank LLC",
@@ -19,67 +16,120 @@ class TestPartnerShowPartnerRentals(TransactionCase):
                 }
             ]
         )
+        cls.partner_jan = cls.partner_rich_bank.child_ids
 
-    def get_bank_and_employee_domains(self, employee=None):
-        return map(
-            lambda partner: partner.action_show_partner_rental()["domain"],
-            (self.bank, self.bank.child_ids or employee),
-        )
+    @classmethod
+    def _get_rental_domain(cls, partner):
+        return partner.action_show_partner_rental()["domain"]
+
+    def get_rentals(self, partner):
+        return self.BikeRent.search(self._get_rental_domain(partner))
+
+    @classmethod
+    def get_rent_search_err_msg(cls, partner):
+        return f"Wrong {partner.name} Rentals search result"
+
+    @classmethod
+    def get_rent_count_err_msg(cls, partner):
+        return f"{partner.name} has incorrect rent_count"
 
     def test_01_no_rentals(self):
-        for domain in self.get_bank_and_employee_domains():
-            self.assertEqual(self.BikeRent.search(domain), self.BikeRent, domain)
+        company_rentals = self.get_rentals(self.partner_rich_bank)
+        employee_rentals = self.get_rentals(self.partner_jan)
+        self.assertTrue(company_rentals == employee_rentals == self.BikeRent)
 
-    def test_02_bank_and_employee_rental(self):
-        # CASE 1: only employee has rental record
+    def test_02_employee_has_rental(self):
+        # GIVEN
+        employee_rental = self.create_rent(20, self.partner_jan)
         # WHEN
-        employee_rental = self.BikeRent.create(
-            [
-                {
-                    "partner_id": self.bank.child_ids.id,
-                    "rent_start": (now := datetime.now()),
-                    "rent_stop": now + timedelta(days=20),
-                }
-            ]
-        )
-        # THEN (both bank and employee should be able to see the record)
-        for domain in self.get_bank_and_employee_domains():
-            self.assertEqual(
-                self.BikeRent.search(domain),
-                employee_rental,
-                f"Case 1: domain {domain}",
-            )
-        # CASE 2 both employee and bank have rental records
-        # WHEN
-        bank_rental = self.BikeRent.create(
-            [
-                {
-                    "partner_id": self.bank.id,
-                    "rent_start": (now := datetime.now()),
-                    "rent_stop": now + timedelta(days=10),
-                }
-            ]
-        )
+        company_rentals = self.get_rentals(self.partner_rich_bank)
+        employee_rentals = self.get_rentals(self.partner_jan)
         # THEN
-        for domain, result in zip(
-            self.get_bank_and_employee_domains(),
-            (bank_rental + employee_rental, employee_rental),
-        ):
-            self.assertEqual(
-                self.BikeRent.search(domain), result, f"Case 2: domain {domain}"
-            )
-        # CASE 3: employee and bank are no longer connected
+        self.assertEqual(
+            company_rentals,
+            employee_rental,
+            self.get_rent_search_err_msg(self.partner_rich_bank),
+        )
+        self.assertEqual(
+            employee_rentals,
+            employee_rental,
+            self.get_rent_search_err_msg(self.partner_jan),
+        )
+        self.assertEqual(
+            len(employee_rentals),
+            self.partner_rich_bank.rent_count,
+            self.get_rent_count_err_msg(self.partner_rich_bank),
+        )
+        self.assertEqual(
+            len(employee_rentals),
+            self.partner_jan.rent_count,
+            self.get_rent_count_err_msg(self.partner_jan),
+        )
+
+    def test_03_company_and_employee_have_rental(self):
+        # GIVEN
+        employee_rental = self.create_rent(20, self.partner_jan)
+        company_rental = self.create_rent(10, self.partner_rich_bank)
         # WHEN
-        employee = self.bank.child_ids
-        employee.write({"parent_id": [Command.unlink(self.bank.id)]})
+        company_rentals = self.get_rentals(self.partner_rich_bank)
+        employee_rentals = self.get_rentals(self.partner_jan)
+        # THEN
+        self.assertEqual(
+            company_rentals,
+            company_rental + employee_rental,
+            self.get_rent_search_err_msg(self.partner_rich_bank),
+        )
+        self.assertEqual(
+            employee_rentals,
+            employee_rental,
+            self.get_rent_search_err_msg(self.partner_jan),
+        )
+        self.assertEqual(
+            len(company_rentals),
+            self.partner_rich_bank.rent_count,
+            self.get_rent_count_err_msg(self.partner_rich_bank),
+        )
+        self.assertEqual(
+            len(employee_rental),
+            self.partner_jan.rent_count,
+            self.get_rent_count_err_msg(self.partner_jan),
+        )
+
+    def test_04_company_and_ex_employee_have_independent_rental(self):
+        # GIVEN
+        employee_rental = self.create_rent(20, self.partner_jan)
+        company_rental = self.create_rent(10, self.partner_rich_bank)
+        # WHEN
+        partner_employee = self.partner_jan
+        partner_employee.write(
+            {"parent_id": [Command.unlink(self.partner_rich_bank.id)]}
+        )
         # THEN
         self.assertTrue(
-            employee.parent_id == self.bank.child_ids == self.ResPartner,
+            partner_employee.parent_id
+            == self.partner_rich_bank.child_ids
+            == self.ResPartner,
             "Case 3 parent has not been unlinked.",
         )
-        for domain, result in zip(
-            self.get_bank_and_employee_domains(employee), (bank_rental, employee_rental)
-        ):
-            self.assertEqual(
-                self.BikeRent.search(domain), result, f"Case 3: domain {domain}"
-            )
+        company_rentals = self.get_rentals(self.partner_rich_bank)
+        employee_rentals = self.get_rentals(partner_employee)
+        self.assertEqual(
+            company_rentals,
+            company_rental,
+            self.get_rent_search_err_msg(self.partner_rich_bank),
+        )
+        self.assertEqual(
+            employee_rentals,
+            employee_rental,
+            self.get_rent_search_err_msg(self.partner_jan),
+        )
+        self.assertEqual(
+            len(company_rentals),
+            self.partner_rich_bank.rent_count,
+            self.get_rent_count_err_msg(self.partner_rich_bank),
+        )
+        self.assertEqual(
+            len(employee_rentals),
+            partner_employee.rent_count,
+            self.get_rent_count_err_msg(partner_employee),
+        )

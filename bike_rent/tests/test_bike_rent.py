@@ -1,25 +1,20 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import TransactionCase
+
+from .common import TestBikeRentCommon
 
 
-class TestBikeRent(TransactionCase):
+class TestBikeRent(TestBikeRentCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.BikeRent = cls.env["bike.rent"]
-        cls.bike_rent_record = cls.BikeRent.create(
-            [
-                {
-                    "rent_start": (now := datetime.now()),
-                    "rent_stop": now + timedelta(days=1),
-                }
-            ]
-        )
+        cls.bike_rent_record = cls.create_rent(delta_days=1)
 
     def test_01_check_rent_stop_prior_rent_start(self):
-        with self.assertRaises(UserError):
+        with self.assertRaisesRegex(
+            UserError, "Rent Stop date cannot be prior to Rent Start!"
+        ):
             self.bike_rent_record.rent_start += timedelta(days=10)
 
     def test_02_compute_number_of_days(self):
