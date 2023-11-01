@@ -6,16 +6,22 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
-            <group name="group_general" position="inside">
-                <field name="is_bike"/>
-                <field
-                    name="bike_manufacturer"
-                    attrs="{'invisible': [('is_bike', '=', False)]}"
-                />
-                <field
-                    name="bike_model"
-                    attrs="{'invisible': [('is_bike', '=', False)]}"
-                />
+            <group name="group_standard_price" position="after">
+                <group groups="bike_rent.group_assistant">
+                    <field name="is_bike"/>
+                    <field
+                        name="bike_manufacturer"
+                        attrs="{'invisible': [('is_bike', '=', False)]}"
+                    />
+                    <field
+                        name="bike_model"
+                        attrs="{'invisible': [('is_bike', '=', False)]}"
+                    />
+                    <field
+                        name="rental_days"
+                        attrs="{'invisible': [('is_bike', '=', False)], 'required': [('is_bike', '=', True)]}"
+                    />
+                </group>
             </group>
         </field>
     </record>

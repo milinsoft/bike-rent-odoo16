@@ -4,13 +4,15 @@ from odoo import api, fields, models
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    rent_ids = fields.One2many("bike.rent", inverse_name="partner_id")
+    bike_rent_ids = fields.One2many("bike.rent", "partner_id")
     rent_count = fields.Integer(compute="_compute_rent_count")
 
-    @api.depends("rent_ids", "child_ids")
+    @api.depends("bike_rent_ids", "child_ids")
     def _compute_rent_count(self):
         for record in self:
-            record.rent_count = len(self.rent_ids.ids + self.child_ids.rent_ids.ids)
+            record.rent_count = len(
+                self.bike_rent_ids.ids + self.child_ids.bike_rent_ids.ids
+            )
 
     def action_show_partner_rental(self):
         self.ensure_one()

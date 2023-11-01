@@ -5,20 +5,6 @@ from .common import TestBikeRentCommon
 
 class TestPartnerShowPartnerRentals(TestBikeRentCommon):
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.partner_rich_bank = cls.ResPartner.create(
-            [
-                {
-                    "name": "Rich Bank LLC",
-                    "is_company": True,
-                    "child_ids": [Command.create({"name": "Jan Kowalski"})],
-                }
-            ]
-        )
-        cls.partner_jan = cls.partner_rich_bank.child_ids
-
-    @classmethod
     def _get_rental_domain(cls, partner):
         return partner.action_show_partner_rental()["domain"]
 

@@ -19,6 +19,8 @@ class BikeRent(models.Model):
     rent_stop = fields.Datetime(required=True)
     notes = fields.Text()
     number_of_days = fields.Integer(compute="_compute_number_of_days", store=True)
+    sale_order_line_id = fields.Many2one("sale.order.line")
+    sale_order_id = fields.Many2one(related="sale_order_line_id.order_id")
 
     @api.depends("rent_start", "rent_stop")
     def _compute_number_of_days(self):

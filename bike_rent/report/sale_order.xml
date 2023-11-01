@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template
+        id="report_saleorder_document"
+        inherit_id="sale.report_saleorder_document"
+    >
+        <!-- workaround to introduce variable -->
+        <xpath expr="//table[1]" position="before">
+            <t
+                t-set="show_bike_rental_columns"
+                t-value="lines_to_report.filtered('product_id.is_bike')"
+            />
+        </xpath>
+
+        <xpath expr="//th[@name='th_description']" position="after">
+            <t t-if="show_bike_rental_columns">
+                <th name="th_rent_start" class="text-start">Rent Start</th>
+                <th name="th_rent_stop" class="text-start">Rent Stop</th>
+                <th name="th_rental_days" class="text-start">Rental Period (days)</th>
+            </t>
+        </xpath>
+
+        <xpath expr="//td[@name='td_name']" position="after">
+            <t t-if="show_bike_rental_columns and line.product_id.is_bike">
+                <t t-if="doc.bike_rent_ids">
+                    <td name="td_rent_start">
+                        <div t-field="line.bike_rent_ids.rent_start"/>
+                    </td>
+                    <td name="td_rent_stop">
+                        <div t-field="line.bike_rent_ids.rent_stop"/>
+                    </td>
+                    <td
+                        name="td_rental_days"
+                        t-out="line.bike_rent_ids.number_of_days"
+                    />
+                </t>
+                <t t-else="">
+                    <td name="td_rent_start">
+                        <div t-field="doc.date_order"/>
+                    </td>
+                    <td name="td_rent_stop">
+                        <div
+                            t-out="doc.date_order + datetime.timedelta(days=line.product_id.rental_days)"
+                        />
+                    </td>
+                    <td name="td_rental_days" t-out="line.product_id.rental_days"/>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>

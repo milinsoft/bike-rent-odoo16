@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="non_bike_product_template_rule_user" model="ir.rule">
+        <field name="name">User cannot access bike products and its variants</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="domain_force">[('is_bike', '=', False)]</field>
+        <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+    </record>
+
+    <record id="bike_product_template_rule_assistant" model="ir.rule">
+        <field
+            name="name"
+        >Bike Rent Assistant can access bike products and its variants</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('bike_rent.group_assistant'))]"/>
+    </record>
+
+</odoo>
