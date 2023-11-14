@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- CHECKOUT CART-->
+    <template id="cart_lines" inherit_id="website_sale.cart_lines">
+        <!-- rename 'Quantity' -> 'Rental Days' table label in product card lines-->
+        <xpath expr="//table/thead/tr/th[3]/t/span" position="replace">
+            <span>Rental Days</span>
+        </xpath>
+
+        <!-- add bike product availability info to the card-->
+        <th class="text-center td-price" position="before">
+            <th>Availability</th>
+        </th>
+        <td class="text-center td-price" position="before">
+            <t
+                t-set="is_not_available"
+                t-value="line.product_id.filtered('is_bike').bike_rent_ids.filtered(lambda b: b._is_active()).bike_id"
+            />
+            <td class="text-center">
+                <span
+                    class="fa fa-circle"
+                    t-attf-style="color: #{'red' if is_not_available else 'green'}"
+                />
+            </td>
+        </td>
+    </template>
+
+    <!-- PRODUCT CARD-->
+    <template id="product_bike_rent" inherit_id="website_sale.product" name="Bike Rent">
+        <!-- display alternative product variants including current-->
+        <div id="product_detail_main" position="after">
+            <t
+                t-if="product.is_bike"
+                t-call="bike_rent.bike_product_alternatives_table"
+            />
+        </div>
+
+        <!-- add specs info to bike product-->
+        <h1 itemprop="name" t-field="product.name" position="after">
+            <t t-if="product.is_bike" t-call="bike_rent.bike_product_specs_table"/>
+        </h1>
+    </template>
+
+    <!-- PRODUCT CATEGORIES-->
+    <template id="filmstrip_categories" inherit_id="website_sale.filmstrip_categories">
+        <!-- Remove the default public category filter on the website-->
+        <div t-if="entries" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </div>
+    </template>
+
+    <!-- EMBEDDED TEMPLATES-->
+    <template id="bike_product_alternatives_table">
+        <div class="row-cols-3">
+                <h5>See also:</h5>
+                <t t-set="base_url" t-value="product.get_base_url()"/>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="product.product_variant_ids" t-as="bike_variant">
+                            <t
+                            t-set="combination_info"
+                            t-value="bike_variant._get_combination_info_variant(add_qty=add_qty, pricelist=pricelist)"
+                        />
+                            <tr>
+                                <td>
+                                    <a
+                                    t-att-href="base_url + bike_variant.website_url"
+                                    t-out="bike_variant.name"
+                                />
+                                </td>
+                                <td>
+                                    <span
+                                    t-out="combination_info['price']"
+                                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                                />
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+    </template>
+
+    <template id="bike_product_specs_table">
+        <table class="col-4">
+            <tbody>
+                <tr>
+                    <td>Manufacturer:</td>
+                    <td><span t-field="product.bike_model"/></td>
+                </tr>
+                <tr>
+                    <td>Model:</td>
+                    <td><span t-field="product.bike_manufacturer"/></td>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+</odoo>

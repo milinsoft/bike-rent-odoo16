@@ -20,14 +20,12 @@ class TestBikeRentFromSO(TestBikeRentCommon):
                     "order_line": [
                         Command.create(
                             {
-                                "product_id": cls.create_rental_product(
-                                    {"rental_days": rent_days}
-                                ).id,
-                                "product_uom_qty": 1,
+                                "product_id": cls.create_rental_product().id,
+                                "bike_rent_days": bike_rent_days,
                                 "price_unit": 5,
                             }
                         )
-                        for rent_days in RENTAL_PERIODS
+                        for bike_rent_days in RENTAL_PERIODS
                     ],
                 }
             ]
@@ -57,14 +55,14 @@ class TestBikeRentFromSO(TestBikeRentCommon):
             for value, expected_value in [
                 (rental.partner_id, self.so_bike_rentals.partner_id),
                 (rental.bike_id, line.product_id),
-                (rental.price, line.price_total),
+                (rental.currency_id.is_zero(rental.price - line.price_total), True),
                 (rental.rent_start, self.so_bike_rentals.date_order),
                 (
                     rental.rent_stop,
                     self.so_bike_rentals.date_order
-                    + timedelta(days=line.product_id.rental_days),
+                    + timedelta(days=line.bike_rent_days),
                 ),
-                (rental.number_of_days, line.product_id.rental_days),
+                (rental.number_of_days, line.bike_rent_days),
             ]:
                 self.assertEqual(
                     value, expected_value, f"Wrong {value} Bike Rent #{rental.id}"

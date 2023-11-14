@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="bike_rental_green_bmw_1d_demo" model="product.product">
-        <field name="name">Green BMW Bike rental 1 day</field>
+    <record id="bike_rental_green_bmw_demo" model="product.product">
+        <field name="name">Green BMW Bike rental</field>
         <field name="type">service</field>
         <field name="list_price">5.0</field>
         <field name="sale_ok">True</field>
         <field name="is_bike">True</field>
         <field name="bike_model">X6</field>
         <field name="bike_manufacturer">BMW</field>
-        <field name="rental_days" eval="1"/>
+        <field name="is_published" eval="True"/>
         <field
             name="image_1920"
             type="base64"
@@ -17,48 +17,15 @@
         />
     </record>
 
-    <record id="bike_rental_green_bmw_2d_demo" model="product.product">
-        <field name="name">Green BMW Bike rental 2 days</field>
-        <field name="type">service</field>
-        <field name="list_price">7.0</field>
-        <field name="sale_ok">True</field>
-        <field name="is_bike">True</field>
-        <field name="bike_model">X6</field>
-        <field name="bike_manufacturer">BMW</field>
-        <field name="rental_days" eval="2"/>
-        <field
-            name="image_1920"
-            type="base64"
-            file="bike_rent/static/src/img/green-bmw-demo-bicycle.png"
-        />
-    </record>
-
-    <record id="bike_rental_green_bmw_3d_demo" model="product.product">
-        <field name="name">Green BMW Bike rental 3 days</field>
-        <field name="type">service</field>
-        <field name="list_price">10.0</field>
-        <field name="sale_ok">True</field>
-        <field name="is_bike">True</field>
-        <field name="bike_model">X6</field>
-        <field name="bike_manufacturer">BMW</field>
-        <field name="rental_days" eval="3"/>
-        <field
-            name="image_1920"
-            type="base64"
-            file="bike_rent/static/src/img/green-bmw-demo-bicycle.png"
-        />
-    </record>
-
-
-    <record id="bike_rental_white_bmw_1d_demo" model="product.product">
-        <field name="name">White BMW Bike rental 1 day</field>
+    <record id="bike_rental_white_bmw_demo" model="product.product">
+        <field name="name">White BMW Bike rental</field>
         <field name="type">service</field>
         <field name="list_price">5.0</field>
         <field name="sale_ok">True</field>
         <field name="is_bike">True</field>
         <field name="bike_model">X6</field>
         <field name="bike_manufacturer">BMW</field>
-        <field name="rental_days" eval="1"/>
+        <field name="is_published" eval="True"/>
         <field
             name="image_1920"
             type="base64"
@@ -66,15 +33,15 @@
         />
     </record>
 
-    <record id="bike_rental_black_balticvairas_1d_demo" model="product.product">
-        <field name="name">Electric Bike rental 1 day</field>
+    <record id="bike_rental_black_balticvairas_demo" model="product.product">
+        <field name="name">Electric Bike rental</field>
         <field name="type">service</field>
         <field name="list_price">5.0</field>
         <field name="sale_ok">True</field>
         <field name="is_bike">True</field>
         <field name="bike_model">E-01</field>
         <field name="bike_manufacturer">Baltik vairas</field>
-        <field name="rental_days" eval="2"/>
+        <field name="is_published" eval="True"/>
         <field
             name="image_1920"
             type="base64"

@@ -26,7 +26,7 @@ class TestPartnerShowPartnerRentals(TestBikeRentCommon):
 
     def test_02_employee_has_rental(self):
         # GIVEN
-        employee_rental = self.create_rent(20, self.partner_jan)
+        employee_rental = self.create_rent(stop_delta=20, partner_id=self.partner_jan)
         # WHEN
         company_rentals = self.get_rentals(self.partner_rich_bank)
         employee_rentals = self.get_rentals(self.partner_jan)
@@ -54,8 +54,10 @@ class TestPartnerShowPartnerRentals(TestBikeRentCommon):
 
     def test_03_company_and_employee_have_rental(self):
         # GIVEN
-        employee_rental = self.create_rent(20, self.partner_jan)
-        company_rental = self.create_rent(10, self.partner_rich_bank)
+        employee_rental = self.create_rent(stop_delta=20, partner_id=self.partner_jan)
+        company_rental = self.create_rent(
+            stop_delta=10, partner_id=self.partner_rich_bank
+        )
         # WHEN
         company_rentals = self.get_rentals(self.partner_rich_bank)
         employee_rentals = self.get_rentals(self.partner_jan)
@@ -83,8 +85,10 @@ class TestPartnerShowPartnerRentals(TestBikeRentCommon):
 
     def test_04_company_and_ex_employee_have_independent_rental(self):
         # GIVEN
-        employee_rental = self.create_rent(20, self.partner_jan)
-        company_rental = self.create_rent(10, self.partner_rich_bank)
+        employee_rental = self.create_rent(stop_delta=20, partner_id=self.partner_jan)
+        company_rental = self.create_rent(
+            stop_delta=10, partner_id=self.partner_rich_bank
+        )
         # WHEN
         partner_employee = self.partner_jan
         partner_employee.write(

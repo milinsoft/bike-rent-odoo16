@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
@@ -21,6 +23,10 @@ class BikeRent(models.Model):
     number_of_days = fields.Integer(compute="_compute_number_of_days", store=True)
     sale_order_line_id = fields.Many2one("sale.order.line")
     sale_order_id = fields.Many2one(related="sale_order_line_id.order_id")
+
+    def _is_active(self):
+        # Do not replace with fields.Datetime.now() as it has lower precision
+        return self.rent_start <= datetime.now() < self.rent_stop
 
     @api.depends("rent_start", "rent_stop")
     def _compute_number_of_days(self):

@@ -15,6 +15,29 @@
                     <field name="bike_rent_ids"/>
                 </page>
             </notebook>
+
+            <!-- Bike lines will use 'bike_rent_days' instead of 'product_uom_qty',
+            other products will use 'product_uom_qty' as before. This allows to have clear UI
+             -->
+            <xpath
+                expr="/form/sheet/notebook/page[@name='order_lines']/field/tree/field[@name='product_uom_qty']"
+                position="before"
+            >-->
+                <field name="product_is_bike" invisible="1"/>
+                <field
+                    name="bike_rent_days"
+                    attrs="{'invisible': [('product_is_bike', '!=', True)]}"
+                />
+            </xpath>
+
+            <xpath
+                expr="/form/sheet/notebook/page[@name='order_lines']/field/tree/field[@name='product_uom_qty']"
+                position="attributes"
+            >
+                <attribute
+                    name="attrs"
+                >{'invisible': [('product_is_bike', '=', True)]}</attribute>
+            </xpath>
         </field>
     </record>
 

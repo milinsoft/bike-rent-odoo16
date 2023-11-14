@@ -11,6 +11,7 @@
     "depends": [
         # odoo
         "sale_management",
+        "website_sale",
     ],
     "data": [
         "security/bike_rent_security.xml",
@@ -23,6 +24,7 @@
         "views/res_partner.xml",
         "views/sale_order.xml",
         "report/sale_order.xml",
+        "templates/website_sale.xml",
     ],
     "demo": ["demo/product_product.xml", "demo/bike_rent.xml"],
     "installable": True,

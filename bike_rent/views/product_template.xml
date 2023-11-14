@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <group name="group_standard_price" position="after">
                 <group groups="bike_rent.group_assistant">
-                    <field name="is_bike"/>
+                    <field name="is_bike" widget="boolean_toggle"/>
                     <field
                         name="bike_manufacturer"
                         attrs="{'invisible': [('is_bike', '=', False)]}"
@@ -16,10 +16,6 @@
                     <field
                         name="bike_model"
                         attrs="{'invisible': [('is_bike', '=', False)]}"
-                    />
-                    <field
-                        name="rental_days"
-                        attrs="{'invisible': [('is_bike', '=', False)], 'required': [('is_bike', '=', True)]}"
                     />
                 </group>
             </group>

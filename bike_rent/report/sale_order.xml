@@ -21,18 +21,22 @@
         </xpath>
 
         <xpath expr="//td[@name='td_name']" position="after">
-            <t t-if="show_bike_rental_columns and line.product_id.is_bike">
+            <t t-if="show_bike_rental_columns">
                 <t t-if="doc.bike_rent_ids">
                     <td name="td_rent_start">
-                        <div t-field="line.bike_rent_ids.rent_start"/>
+                        <div
+                            t-if="line.product_is_bike"
+                            t-field="line.bike_rent_ids.rent_start"
+                        />
+                        <div t-else=""/>
                     </td>
                     <td name="td_rent_stop">
-                        <div t-field="line.bike_rent_ids.rent_stop"/>
+                        <div
+                            t-if="line.product_is_bike"
+                            t-field="line.bike_rent_ids.rent_stop"
+                        />
+                        <div t-else=""/>
                     </td>
-                    <td
-                        name="td_rental_days"
-                        t-out="line.bike_rent_ids.number_of_days"
-                    />
                 </t>
                 <t t-else="">
                     <td name="td_rent_start">
@@ -40,12 +44,27 @@
                     </td>
                     <td name="td_rent_stop">
                         <div
-                            t-out="doc.date_order + datetime.timedelta(days=line.product_id.rental_days)"
+                            t-out="doc.date_order + datetime.timedelta(days=line.bike_rent_days)"
                         />
                     </td>
-                    <td name="td_rental_days" t-out="line.product_id.rental_days"/>
                 </t>
+                <td name="td_rental_days">
+                    <div t-out="line.bike_rent_days"/>
+                </td>
             </t>
         </xpath>
+
+        <span t-field="line.product_uom_qty" position="attributes">
+            <attribute name="t-if">not line.product_is_bike</attribute>
+        </span>
+
+        <span t-field="line.product_uom_qty" position="attributes">
+            <attribute name="t-if">not line.product_is_bike</attribute>
+        </span>
+
+        <span t-field="line.product_uom" position="attributes">
+            <attribute name="t-if">not line.product_is_bike</attribute>
+        </span>
+
     </template>
 </odoo>
