@@ -11,7 +11,7 @@ class ResPartner(models.Model):
     def _compute_rent_count(self):
         for record in self:
             record.rent_count = len(
-                self.bike_rent_ids.ids + self.child_ids.bike_rent_ids.ids
+                record.bike_rent_ids.ids + record.child_ids.bike_rent_ids.ids
             )
 
     def action_show_partner_rental(self):
